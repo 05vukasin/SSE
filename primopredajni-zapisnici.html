@@ -238,55 +238,57 @@
                 console.error('Greška prilikom preuzimanja primopredajnih zapisnika:', error);
             }
         }
-    
+
         function displayZapisnici(zapisnici) {
             const zapisnikList = document.getElementById('zapisnikList');
             zapisnikList.innerHTML = '';
-    
+
             if (zapisnici.length === 0) {
                 zapisnikList.innerHTML = '<p>Nema dostupnih primopredajnih zapisnika.</p>';
                 return;
             }
-    
+
             zapisnici.forEach(zapisnik => {
                 const zapisnikItem = document.createElement('div');
                 zapisnikItem.classList.add('zapisnik-item');
                 zapisnikItem.innerHTML = `
-                    <h4>Zapisnik ${zapisnik.ID}</h4>
-                    <p><strong>Datum Kreiranja:</strong> ${new Date(zapisnik.DatumKreiranja).toLocaleDateString()}</p>
-                    <p><strong>Klijent ID:</strong> ${zapisnik.KlijentID}</p>
-                    <p><strong>Elektrana ID:</strong> ${zapisnik.ElektranaID}</p>
-                    <p><strong>Dokument:</strong> ${zapisnik.Dokument}</p>
-                    <button onclick="deleteZapisnik(${zapisnik.ID})">Obriši</button>
-                `;
+                <h4>Zapisnik ${zapisnik.ID}</h4>
+                <p><strong>Datum Kreiranja:</strong> ${new Date(zapisnik.DatumKreiranja).toLocaleDateString()}</p>
+                <p><strong>Klijent ID:</strong> ${zapisnik.KlijentID}</p>
+                <p><strong>Elektrana ID:</strong> ${zapisnik.ElektranaID}</p>
+                <p><strong>Dokument:</strong> ${zapisnik.Dokument}</p>
+                <button onclick="deleteZapisnik(${zapisnik.ID})">Obriši</button>
+            `;
                 zapisnikList.appendChild(zapisnikItem);
             });
         }
-    
+
         function openAddZapisnikPopup() {
             document.getElementById('addZapisnikPopup').classList.add('active');
         }
-    
+
         function closeAddZapisnikPopup() {
             document.getElementById('addZapisnikPopup').classList.remove('active');
         }
-    
+
         async function searchKlijent() {
             const query = document.getElementById('searchKlijent').value.toLowerCase();
+            console.log("Pretraga klijenata, query:", query);
+
             if (query.length === 0) {
                 document.getElementById('klijentList').classList.remove('active');
                 return;
             }
-    
+
             try {
                 const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/klijenti');
                 const klijenti = await response.json();
-    
+                console.log("Preuzeti klijenti:", klijenti);
+
                 const filteredKlijenti = klijenti.filter(klijent => klijent.Naziv.toLowerCase().includes(query));
-    
                 const klijentList = document.getElementById('klijentList');
                 klijentList.innerHTML = '';
-    
+
                 if (filteredKlijenti.length > 0) {
                     klijentList.classList.add('active');
                     filteredKlijenti.forEach(klijent => {
@@ -302,29 +304,25 @@
                 console.error('Greška prilikom pretrage klijenata:', error);
             }
         }
-    
-        function selectKlijent(id, naziv) {
-            document.getElementById('klijentID').value = id;
-            document.getElementById('searchKlijent').value = naziv;
-            document.getElementById('klijentList').classList.remove('active');
-        }
-    
+
         async function searchElektrana() {
             const query = document.getElementById('searchElektrana').value.toLowerCase();
+            console.log("Pretraga elektrana, query:", query);
+
             if (query.length === 0) {
                 document.getElementById('elektranaList').classList.remove('active');
                 return;
             }
-    
+
             try {
                 const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/solarne-elektrane');
                 const elektrane = await response.json();
-    
+                console.log("Preuzete elektrane:", elektrane);
+
                 const filteredElektrane = elektrane.filter(elektrana => elektrana.NazivElektrane.toLowerCase().includes(query));
-    
                 const elektranaList = document.getElementById('elektranaList');
                 elektranaList.innerHTML = '';
-    
+
                 if (filteredElektrane.length > 0) {
                     elektranaList.classList.add('active');
                     filteredElektrane.forEach(elektrana => {
@@ -340,57 +338,70 @@
                 console.error('Greška prilikom pretrage elektrana:', error);
             }
         }
-    
+
+        function selectKlijent(id, naziv) {
+            console.log("Odabran klijent ID:", id);
+            document.getElementById('klijentID').value = id;
+            document.getElementById('searchKlijent').value = naziv;
+            document.getElementById('klijentList').classList.remove('active');
+        }
+
         function selectElektrana(id, naziv) {
+            console.log("Odabrana elektrana ID:", id);
             document.getElementById('elektranaID').value = id;
             document.getElementById('searchElektrana').value = naziv;
             document.getElementById('elektranaList').classList.remove('active');
         }
-    
+
         async function addZapisnik() {
-            const klijentID = document.getElementById('klijentID').value;
-            const elektranaID = document.getElementById('elektranaID').value;
-            const dokument = document.getElementById('dokument').value;
-    
-            if (!klijentID || !elektranaID || !dokument) {
-                alert("Sva obavezna polja moraju biti popunjena.");
-                return;
-            }
-    
-            const data = {
-                klijentID,
-                elektranaID,
-                dokument
-            };
-    
-            try {
-                const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/primopredajni-zapisnik', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-    
-                if (response.ok) {
-                    alert('Primopredajni zapisnik uspešno dodat.');
-                    closeAddZapisnikPopup();
-                    fetchZapisnici(); // Osvježite listu primopredajnih zapisnika
-                } else {
-                    alert('Greška prilikom dodavanja primopredajnog zapisnika.');
-                }
-            } catch (error) {
-                console.error('Greška prilikom dodavanja primopredajnog zapisnika:', error);
-            }
+    const klijentID = document.getElementById('klijentID').value;
+    const elektranaID = document.getElementById('elektranaID').value;
+    const dokument = document.getElementById('dokument').value;
+
+    console.log("Klijent ID:", klijentID);
+    console.log("Elektrana ID:", elektranaID);
+    console.log("Dokument:", dokument);
+
+    if (!klijentID || !elektranaID || !dokument) {
+        alert("Sva obavezna polja moraju biti popunjena.");
+        return;
+    }
+
+    const data = {
+        klijentID: klijentID.toString(), // Osigurava da je klijentID string
+        elektranaID: elektranaID.toString(), // Osigurava da je elektranaID string
+        dokument: dokument // Dokument je već string
+    };
+
+    try {
+        const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/primopredajni-zapisnik', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert('Primopredajni zapisnik uspešno dodat.');
+            closeAddZapisnikPopup();
+            fetchZapisnici(); // Osvježite listu primopredajnih zapisnika
+        } else {
+            const errorText = await response.text(); // Pročitajte poruku o grešci sa servera
+            alert(`Greška prilikom dodavanja primopredajnog zapisnika: ${errorText}`);
         }
-    
+    } catch (error) {
+        console.error('Greška prilikom dodavanja primopredajnog zapisnika:', error);
+    }
+}
+
         async function deleteZapisnik(id) {
             if (confirm("Da li ste sigurni da želite da obrišete ovaj zapisnik?")) {
                 try {
                     const response = await fetch(`https://sseapi20240821015435.azurewebsites.net/api/primopredajni-zapisnik/${id}`, {
                         method: 'DELETE'
                     });
-    
+
                     if (response.ok) {
                         alert('Primopredajni zapisnik uspešno obrisan.');
                         fetchZapisnici(); // Osvježite listu primopredajnih zapisnika
@@ -402,11 +413,10 @@
                 }
             }
         }
-    
+
         // Pozovite funkciju za preuzimanje primopredajnih zapisnika prilikom učitavanja stranice
         fetchZapisnici();
     </script>
-    
 </body>
 
 </html>
