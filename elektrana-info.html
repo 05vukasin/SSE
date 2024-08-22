@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informacije o Solarnoj Elektrani</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        nav {
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        nav h1 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        nav h1 span {
+            color: #1E90FF;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        nav ul li {
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 0;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #575757;
+        }
+
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+
+        .content h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .info-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-group {
+            margin-bottom: 30px;
+        }
+
+        .info-group h3 {
+            text-align: left;
+            color: #1E90FF;
+            border-bottom: 2px solid #1E90FF;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .info-item label {
+            font-weight: bold;
+            color: #333;
+            width: 150px;
+        }
+
+        .info-item p {
+            margin: 0;
+            color: #666;
+            flex: 1;
+            text-align: right;
+        }
+
+        .radni-nalozi {
+            margin-top: 40px;
+        }
+
+        .add-nalog-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1E90FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .add-nalog-btn .plus-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .add-nalog-btn:hover {
+            background-color: #1C86EE;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .popup-content {
+            text-align: center;
+        }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .popup input[type="text"],
+        .popup input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .popup button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1E90FF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #1C86EE;
+        }
+
+        .radni-nalozi-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .radni-nalozi-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .add-nalog-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto 20px auto;
+            padding: 10px;
+            background-color: #1E90FF;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .add-nalog-button:hover {
+            background-color: #1C86EE;
+        }
+
+        .nalog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nalog-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nalog-item h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .nalog-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .nalog-item p strong {
+            color: #333;
+        }
+
+        .oprema-container {
+    margin-top: 40px;
+}
+
+.oprema-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.add-oprema-button {
+    display: block;
+    width: 200px;
+    margin: 0 auto 20px auto;
+    padding: 10px;
+    background-color: #1E90FF;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-oprema-button:hover {
+    background-color: #1C86EE;
+}
+
+.oprema-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0;
+    list-style-type: none;
+}
+
+.oprema-list .oprema-item {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.oprema-list .oprema-item h4 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.oprema-list .oprema-item p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Popup za dodavanje opreme */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 500px;
+}
+
+.popup.active {
+    display: block;
+}
+
+.popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.popup h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.popup input[type="text"],
+.popup input[type="number"],
+.popup input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.popup button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1E90FF;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.popup button:hover {
+    background-color: #1C86EE;
+}
+
+/* Dropdown za pretragu opreme */
+.dropdown {
+    position: relative;
+    display: none;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #fff;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.dropdown.active {
+    display: block;
+}
+
+.dropdown div {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown div:hover {
+    background-color: #eee;
+}
+
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>Key<span>4</span>s</h1>
+        <ul>
+            <li><a href="index.html">Početna</a></li>
+            <li><a href="korisnici.html">Korisnici</a></li>
+            <li><a href="klijenti.html">Klijenti</a></li>
+            <li><a href="elektrane.html">Elektrane</a></li>
+            <li><a href="radni-nalozi.html">Radni Nalozi</a></li>
+            <li><a href="oprema.html">Oprema</a></li>
+            <li><a href="primopredajni-zapisnici.html">Primopredajni Zapisnici</a></li>
+            <li><a href="dokumenti.html">Dokumenti</a></li>
+        </ul>
+    </nav>
+
+
+    <div class="content">
+        <h1>Informacije o Solarnoj Elektrani</h1>
+        <div class="info-container" id="infoContainer">
+            <!-- Informacije o solarnoj elektrani će biti prikazane ovde -->
+        </div>
+
+
+
+        <div class="radni-nalozi-container">
+            <h2>Radni Nalozi</h2>
+            <button class="add-nalog-button" onclick="openAddNalogPopup()">+ Dodaj Radni Nalog</button>
+            <div id="nalogList" class="nalog-list">
+                <!-- Prikaz postojećih radnih naloga će biti ubačen ovde -->
+            </div>
+        </div>
+
+
+        <div class="oprema-container">
+            <h2>Oprema</h2>
+            <button class="add-oprema-button" onclick="openAddOpremaPopup()">+ Dodaj Oprema</button>
+            <div id="opremaList" class="oprema-list">
+                <!-- Prikaz postojeće opreme koja je povezana sa solarnom elektranom -->
+            </div>
+        </div>
+
+        <!-- Popup za dodavanje opreme -->
+        <div class="popup" id="addOpremaPopup">
+            <span class="close-btn" onclick="closeAddOpremaPopup()">✖</span>
+            <h2>Dodaj Oprema</h2>
+            <input type="text" id="searchOprema" placeholder="Pretraga Opreme" oninput="searchOprema()" required>
+            <div id="opremaDropdown" class="dropdown"></div>
+            <input type="hidden" id="opremaID" required>
+
+            <input type="text" id="serijskiBroj" placeholder="Serijski Broj" required>
+            <input type="date" id="datumInstalacijeOprema" placeholder="Datum Instalacije" required>
+            <input type="date" id="garancijaDo" placeholder="Garancija Do">
+
+            <button onclick="addOpremaToElektrana()">Dodaj</button>
+        </div>
+    </div>
+
+    <!-- Popup za dodavanje radnog naloga -->
+    <div id="addNalogPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeAddNalogPopup()">✖</span>
+            <h2>Dodaj Radni Nalog</h2>
+            <input type="text" id="opisRadova" placeholder="Opis Radova" required>
+            <input type="text" id="izvrsilac" placeholder="Izvršilac" required>
+            <input type="text" id="status" placeholder="Status" required>
+            <p>Garancija</p>
+            <input type="date" id="garancija" placeholder="Garancija (opciono)">
+            <button onclick="addRadniNalog()">Dodaj</button>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+
+        async function fetchOpremaList() {
+            const powerplantId = sessionStorage.getItem('selectedPowerplantId');
+
+            if (!powerplantId) {
+                alert('ID solarne elektrane nije pronađen u sesiji.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://sseapi20240821015435.azurewebsites.net/api/oprema/elektrana/${powerplantId}`);
+                console.log("API poziv na /api/oprema/elektrana/", powerplantId);
+
+                if (response.ok) {
+                    const oprema = await response.json();
+                    console.log("Podaci o opremi za elektranu:", oprema);
+                    displayOpremaList(oprema);
+                } else {
+                    console.error("Greška prilikom preuzimanja opreme za elektranu:", powerplantId);
+                    alert('Nema dostupne opreme za ovu elektranu.');
+                }
+            } catch (error) {
+                console.error('Greška prilikom preuzimanja opreme:', error);
+            }
+        }
+
+        function displayOpremaList(oprema) {
+            const opremaList = document.getElementById('opremaList');
+            opremaList.innerHTML = '';
+
+            if (oprema.length === 0) {
+                opremaList.innerHTML = '<p>Nema dostupne opreme.</p>';
+                return;
+            }
+
+            oprema.forEach(item => {
+                const opremaItem = document.createElement('div');
+                opremaItem.classList.add('oprema-item');
+                opremaItem.innerHTML = `
+                <h4>${item.NazivOpreme}</h4>
+                <p><strong>Serijski Broj:</strong> ${item.SerijskiBroj}</p>
+                <p><strong>Datum Instalacije:</strong> ${new Date(item.DatumInstalacije).toLocaleDateString()}</p>
+                ${item.GarancijaDo ? `<p><strong>Garancija Do:</strong> ${new Date(item.GarancijaDo).toLocaleDateString()}</p>` : ''}
+            `;
+                opremaList.appendChild(opremaItem);
+            });
+        }
+
+        function openAddOpremaPopup() {
+            document.getElementById('addOpremaPopup').classList.add('active');
+        }
+
+        function closeAddOpremaPopup() {
+            document.getElementById('addOpremaPopup').classList.remove('active');
+        }
+
+        async function searchOprema() {
+            const query = document.getElementById('searchOprema').value.toLowerCase();
+
+            if (query.length === 0) {
+                document.getElementById('opremaDropdown').classList.remove('active');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/oprema');
+                const oprema = await response.json();
+
+                console.log("Pretraga opreme, query:", query, "Rezultati:", oprema);
+
+                const filteredOprema = oprema.filter(item => item.NazivOpreme.toLowerCase().includes(query));
+
+                const opremaDropdown = document.getElementById('opremaDropdown');
+                opremaDropdown.innerHTML = '';
+
+                if (filteredOprema.length > 0) {
+                    opremaDropdown.classList.add('active');
+                    filteredOprema.forEach(item => {
+                        const div = document.createElement('div');
+                        div.innerHTML = item.NazivOpreme;
+                        div.onclick = () => selectOprema(item.ID, item.NazivOpreme);
+                        opremaDropdown.appendChild(div);
+                    });
+                } else {
+                    opremaDropdown.classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Greška prilikom pretrage opreme:', error);
+            }
+        }
+
+        function selectOprema(id, naziv) {
+            console.log("Odabrana oprema ID:", id, "Naziv:", naziv);
+
+            document.getElementById('opremaID').value = id;
+            document.getElementById('searchOprema').value = naziv;
+            document.getElementById('opremaDropdown').classList.remove('active');
+        }
+
+        async function addOpremaToElektrana() {
+            const elektranaID = sessionStorage.getItem('selectedPowerplantId');
+            const opremaID = document.getElementById('opremaID').value;
+            const serijskiBroj = document.getElementById('serijskiBroj').value;
+            const datumInstalacije = document.getElementById('datumInstalacijeOprema').value;
+            const garancijaDo = document.getElementById('garancijaDo').value;
+
+            if (!opremaID || !serijskiBroj || !datumInstalacije || !elektranaID) {
+                alert("Sva obavezna polja moraju biti popunjena.");
+                return;
+            }
+
+            const data = {
+                opremaID,
+                elektranaID,
+                serijskiBroj,
+                datumInstalacije,
+                garancijaDo
+            };
+
+            try {
+                const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/oprema/povezi', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Oprema uspešno povezana sa solarnom elektranom.');
+                    closeAddOpremaPopup();
+                    fetchOpremaList(); // Osvježite listu opreme
+                } else {
+                    alert('Greška prilikom povezivanja opreme sa solarnom elektranom.');
+                }
+            } catch (error) {
+                console.error('Greška prilikom povezivanja opreme sa solarnom elektranom:', error);
+            }
+        }
+
+        // Poziv funkcije za preuzimanje opreme nakon što se stranica učita
+        fetchOpremaList();
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            const powerplantId = sessionStorage.getItem('selectedPowerplantId');
+
+            console.log("ID preuzet iz sessionStorage:", powerplantId); // Loguje preuzet ID
+
+            if (!powerplantId) {
+                alert('ID solarne elektrane nije pronađen u sesiji.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://sseapi20240821015435.azurewebsites.net/api/solarna-elektrana/${powerplantId}`);
+                console.log("API poziv na /api/solarna-elektrana/", powerplantId); // Loguje poziv API-ju
+
+                if (response.ok) {
+                    const powerplant = await response.json();
+                    console.log("Podaci o solarnoj elektrani:", powerplant); // Loguje podatke o solarnoj elektrani
+                    displayPowerplantInfo(powerplant[0]); // Prikazujemo informacije prve elektrane iz rezultata
+                    fetchRadniNalozi(powerplantId); // Pozivamo funkciju za preuzimanje radnih naloga
+
+                    // Sačuvamo KlijentID u sessionStorage za kasniju upotrebu
+                    sessionStorage.setItem('KlijentID', powerplant[0].KlijentID);
+
+                } else if (response.status === 404) {
+                    console.error("Solarna elektrana nije pronađena za ID:", powerplantId);
+                    alert('Solarna elektrana nije pronađena.');
+                } else {
+                    console.error("Greška prilikom preuzimanja podataka za ID:", powerplantId);
+                    alert('Došlo je do greške prilikom preuzimanja podataka.');
+                }
+            } catch (error) {
+                console.error('Greška prilikom preuzimanja informacija o solarnoj elektrani:', error);
+            }
+        });
+
+        function displayPowerplantInfo(powerplant) {
+            const infoContainer = document.getElementById('infoContainer');
+
+            infoContainer.innerHTML = `
+        <h2>${powerplant.NazivElektrane}</h2>
+        <div class="info-group">
+            <h3>Informacije o Klijentu</h3>
+            <div class="info-item">
+                <label>Naziv Klijenta:</label>
+                <p>${powerplant.KlijentNaziv}</p>
+            </div>
+            <div class="info-item">
+                <label>Adresa Klijenta:</label>
+                <p>${powerplant.KlijentAdresa}</p>
+            </div>
+            <div class="info-item">
+                <label>Telefon Klijenta:</label>
+                <p>${powerplant.KlijentTelefon}</p>
+            </div>
+            <div class="info-item">
+                <label>Email Klijenta:</label>
+                <p>${powerplant.KlijentEmail}</p>
+            </div>
+        </div>
+        <div class="info-group">
+            <h3>Informacije o Solarnoj Elektrani</h3>
+            <div class="info-item">
+                <label>Lokacija:</label>
+                <p>${powerplant.Lokacija}</p>
+            </div>
+            <div class="info-item">
+                <label>Pozicija Panela:</label>
+                <p>${powerplant.PozicijaPanela}</p>
+            </div>
+            <div class="info-item">
+                <label>Snaga AC (kW):</label>
+                <p>${powerplant.SnagaAC}</p>
+            </div>
+            <div class="info-item">
+                <label>Snaga DC (kW):</label>
+                <p>${powerplant.SnagaDC}</p>
+            </div>
+            <div class="info-item">
+                <label>Broj Panela:</label>
+                <p>${powerplant.BrojPanela}</p>
+            </div>
+            <div class="info-item">
+                <label>Datum Instalacije:</label>
+                <p>${powerplant.DatumInstalacije}</p>
+            </div>
+            <div class="info-item">
+                <label>Vrsta Panela:</label>
+                <p>${powerplant.VrstaPanela}</p>
+            </div>
+            <div class="info-item">
+                <label>Vrsta Invertora:</label>
+                <p>${powerplant.VrstaInvertora}</p>
+            </div>
+        </div>
+    `;
+        }
+
+        async function fetchRadniNalozi(powerplantId) {
+            try {
+                const response = await fetch(`https://sseapi20240821015435.azurewebsites.net/api/radni-nalozi/${powerplantId}`);
+                console.log("API poziv na /api/radni-nalozi/", powerplantId); // Loguje poziv API-ju za radne naloge
+
+                if (response.ok) {
+                    const radniNalozi = await response.json();
+                    console.log("Podaci o radnim nalozima:", radniNalozi); // Loguje podatke o radnim nalozima
+                    displayRadniNalozi(radniNalozi);
+                } else {
+                    console.error("Greška prilikom preuzimanja radnih naloga za ID elektrane:", powerplantId);
+                    alert('Došlo je do greške prilikom preuzimanja radnih naloga.');
+                }
+            } catch (error) {
+                console.error('Greška prilikom preuzimanja radnih naloga:', error);
+            }
+        }
+
+        function displayRadniNalozi(radniNalozi) {
+            const nalogList = document.getElementById('nalogList');
+            nalogList.innerHTML = '';
+
+            if (radniNalozi.length === 0) {
+                nalogList.innerHTML = '<p>Nema dostupnih radnih naloga.</p>';
+                return;
+            }
+
+            radniNalozi.forEach(nalog => {
+                const nalogItem = document.createElement('div');
+                nalogItem.classList.add('nalog-item');
+                nalogItem.innerHTML = `
+            <h4>${nalog.OpisRadova}</h4>
+            <p><strong>Izvršilac:</strong> ${nalog.Izvrsilac}</p>
+            <p><strong>Status:</strong> ${nalog.Status}</p>
+            <p><strong>Datum Kreiranja:</strong> ${new Date(nalog.DatumKreiranja).toLocaleDateString()}</p>
+            ${nalog.Garancija ? `<p><strong>Garancija:</strong> ${new Date(nalog.Garancija).toLocaleDateString()}</p>` : ''}
+        `;
+                nalogList.appendChild(nalogItem);
+            });
+        }
+
+        function openAddNalogPopup() {
+            document.getElementById('addNalogPopup').classList.add('active');
+        }
+
+        function closeAddNalogPopup() {
+            document.getElementById('addNalogPopup').classList.remove('active');
+        }
+
+        async function addRadniNalog() {
+
+            const opisRadova = document.getElementById('opisRadova')?.value;
+            const izvrsilac = document.getElementById('izvrsilac')?.value;
+            const status = document.getElementById('status')?.value;
+            const garancija = document.getElementById('garancija')?.value;
+            const elektranaID = sessionStorage.getItem('selectedPowerplantId'); // Preuzmite ID elektrane iz sessionStorage
+
+            if (!opisRadova || !izvrsilac || !status || !elektranaID) {
+                alert("Sva obavezna polja moraju biti popunjena.");
+                return;
+            }
+
+            // Preuzimanje klijentID iz podataka o solarnoj elektrani koje ste već preuzeli
+            let klijentID = null;
+
+            try {
+                const response = await fetch(`https://sseapi20240821015435.azurewebsites.net/api/solarna-elektrana/${elektranaID}`);
+                if (response.ok) {
+                    const powerplant = await response.json();
+                    klijentID = powerplant[0]?.KlijentID; // Preuzmite klijentID iz podataka o solarnoj elektrani
+                } else {
+                    alert('Greška prilikom preuzimanja podataka o solarnoj elektrani.');
+                    return;
+                }
+            } catch (error) {
+                console.error('Greška prilikom preuzimanja informacija o solarnoj elektrani:', error);
+                return;
+            }
+
+            if (!klijentID) {
+                alert("KlijentID nije pronađen.");
+                return;
+            }
+
+            const data = {
+
+                opisRadova,
+                izvrsilac,
+                status,
+                elektranaID,
+                klijentID,
+                garancija
+            };
+
+            try {
+                const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/radni-nalog', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Radni nalog uspešno dodat.');
+                    closeAddNalogPopup();
+                    fetchRadniNalozi(elektranaID); // Osvježite listu radnih naloga
+                } else {
+                    alert('Greška prilikom dodavanja radnog naloga.');
+                }
+            } catch (error) {
+                console.error('Greška prilikom dodavanja radnog naloga:', error);
+            }
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

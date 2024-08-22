@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        nav {
+            width: 200px;
+            height: 100vh;
+            background-color: #333; /* Tamno siva */
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        nav h1 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        nav h1 span {
+            color:  #1E90FF; /* Svetlo siva za broj 4 */
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        nav ul li {
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 0;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #575757; /* Svetlija siva kada se pređe preko linka */
+        }
+
+        section {
+            margin-left: 200px; /* Prostor za meni */
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #1E90FF; /* Svetlo plava */
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header h1 span {
+            color: #b0b0b0; /* Svetlo siva za broj 4 */
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Provera da li je korisnik ulogovan
+        if (!sessionStorage.getItem('userId')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <nav>
+        <h1>Key<span>4</span>s</h1>
+        <ul>
+            <li><a href="index.html">Početna</a></li>
+            <li><a href="korisnici.html">Korisnici</a></li>
+            <li><a href="klijenti.html">Klijenti</a></li>
+            <li><a href="elektrane.html">Elektrane</a></li>
+            <li><a href="radni-nalozi.html">Radni Nalozi</a></li>
+            <li><a href="oprema.html">Oprema</a></li>
+            <li><a href="primopredajni-zapisnici.html">Primopredajni Zapisnici</a></li>
+            <li><a href="dokumenti.html">Dokumenti</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <div class="header">
+            <h1>Welcome to Key<span>4</span>s Dashboard</h1>
+        </div>
+        <!-- Sadržaj dashboard-a ide ovde -->
+    </section>
+</body>
+</html>

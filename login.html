@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 320px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1E90FF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1C86EE;
+        }
+
+        .login-container p {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-container a {
+            color: #1E90FF;
+            text-decoration: none;
+        }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="lozinka" placeholder="Lozinka" required>
+        <button onclick="login()">Login</button>
+        <p>Nemate profil? <a href="signin.html">Registrujte se ovde</a>.</p>
+    </div>
+
+    <script>
+        async function login() {
+    console.log("Login funkcija je pokrenuta.");  // Provera da li je funkcija pokrenuta
+    
+    const email = document.getElementById('email').value;
+    const lozinka = document.getElementById('lozinka').value;
+
+    console.log("Email:", email);  // Provera da li su polja ispravno dohvaćena
+    console.log("Lozinka:", lozinka);
+
+    const data = {
+        email: email,
+        lozinka: lozinka
+    };
+
+    try {
+        const response = await fetch('https://sseapi20240821015435.azurewebsites.net/api/korisnik/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log("Response status:", response.status);  // Provera HTTP statusa odgovora
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log("Odgovor sa servera:", result);  // Prikaz odgovora sa servera
+
+            // Proveri strukturu odgovora pre nego što pokušaš pristupiti 'ID'
+            if (result && result.ID) {
+                console.log("Login uspešan, preusmeravanje...");
+                sessionStorage.setItem('userId', result.ID);
+                window.location.href = 'index.html';
+            } else {
+                console.error("Neispravan odgovor sa servera: ID nije pronađen.");
+                alert("Došlo je do greške prilikom prijave. Molimo pokušajte ponovo.");
+            }
+        } else {
+            console.log("Login neuspešan, status:", response.status);
+            alert('Neispravan email ili lozinka. Pokušajte ponovo.');
+        }
+    } catch (error) {
+        console.error("Greška prilikom logovanja:", error);
+    }
+}
+    </script>
+</body>
+
+</html>
